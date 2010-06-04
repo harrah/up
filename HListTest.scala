@@ -117,6 +117,10 @@ object HListTest
 	val (aa, bb) = ins7.i[_6].splitAt
 
 	val dropRight = x.reverse.i[_3].drop.reverse
+	
+	val plain = 3 :: true :: 'k' :: HNil
+	val list: List[AnyVal] = toList(plain)
+	val list2 = toList[AnyVal](plain)
 
 	def run()
 	{
