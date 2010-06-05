@@ -6,5 +6,6 @@ object Test
 		NatTest.run()
 		DenseTest.run()
 		TreeTest.run()
+		TypedMapTest.run()
 	}
 }
