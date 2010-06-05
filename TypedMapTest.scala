@@ -34,6 +34,12 @@ object TypedMapTest
 	{
 		assert( m[String, Int]("a") == 3 )
 		assert( m[String, Boolean]("a") == true )
+		assert( m(5) == "asdf" )
+		assert( m(17) == "jkl" )
+		assert( m( List[String]() ) == 9 )
+		assert( m( List[Int]() ) == 4 )
+		assert( m( 5 :: Nil ) == 7 )
+		assert( m( "xt" :: Nil ) == 7 )
 
 		assert( m.getOr("a", 5) == 3)
 		assert( m.getOr("b", 5) == 5)
