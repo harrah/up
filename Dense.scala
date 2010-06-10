@@ -13,6 +13,8 @@ sealed trait Dense {
 	type Sq <: Dense
 	type Exp[b <: Dense] <: Dense
 	
+	type Reverse[Acc <: Dense] <: Dense
+	
 	type ReceiveMult[shifted <: Dense, acc <: Dense] <: Dense
 	type ReceiveExp[base <: Dense, acc <: Dense] <: Dense
 	type Match[ NonZero <: Up, Zero <: Up, Up] <: Up
@@ -43,11 +45,15 @@ sealed trait DCons[d <: Digit, T <: Dense] extends Dense {
 			Zero :: tail#Add[b#tail]#Inc,
 			d :: tail#Add[b#tail],
 			Dense]
+			
+	type Reverse[Acc <: Dense] = T#Reverse[DCons[d, Acc]]
 
 	type Mult[b <: Dense] =
 		b#Compare[d :: T]#Match[ b#ReceiveMult[d :: T, DNil], ReceiveMult[b, DNil], ReceiveMult[b, DNil], Dense ]
 	type ReceiveMult[shifted <: Dense, acc <: Dense] =
-		tail#ReceiveMult[shifted#ShiftL, digit#Match[acc#Add[shifted], acc, Dense]]
+		Hack[tail#ReceiveMult[shifted#ShiftL, digit#Match[acc#Add[shifted], acc, Dense]]]
+	// prevents a cyclic reference when doing: type A = _3#Mult[_3].
+	type Hack[D <: Dense] = D
 	
 	type Sq = ReceiveMult[DCons[d, T], DNil]
 	type Exp[b <: Dense] = b#ReceiveExp[DCons[d, T], _1]
@@ -73,6 +79,8 @@ sealed trait DNil extends Dense {
 	type Add[b <: Dense] = b
 	type Mult[b <: Dense] = DNil
 	type Sq = DNil
+	
+	type Reverse[D <: Dense] = D
 	
 	type Exp[b <: Dense] = b#Match[ _0, _1, Dense]
 	type ReceiveExp[base <: Dense, acc <: Dense] = acc
