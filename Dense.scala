@@ -126,6 +126,9 @@ object Dense
 	implicit def dnilToRep = new DRep[DNil](0)
 	implicit def dcons0ToRep[D <: Dense](implicit tailRep: DRep[D]): DRep[DCons[Zero, D]] = new DRep(tailRep.value * 2)
 	implicit def dcons1ToRep[D <: Dense](implicit tailRep: DRep[D]): DRep[DCons[One, D]] = new DRep(tailRep.value * 2 + 1)
+
+	def toTuple3[T <: Triple[Dense,Dense,Dense]](implicit dra: DRep[T#_1], drb: DRep[T#_2], drc: DRep[T#_3]) : (Int, Int, Int) =
+		(toInt[T#_1], toInt[T#_2], toInt[T#_3])
 }
 
 sealed trait Digit {
