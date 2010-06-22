@@ -51,7 +51,7 @@ sealed trait Nat0 extends Nat {
 	type Compare[N <: Nat] = N#Match[ConstLT, EQ, Comparison]
 }
 sealed trait Succ[N <: Nat] extends Nat {
-	type FoldR[Init <: Type, Type, F <: Fold[Nat, Type]] = F#Apply[Succ[N], N#FoldR[Init, Type, F]]//N#FoldR[F#Apply[Succ[N],Init], Type, F]
+	type FoldR[Init <: Type, Type, F <: Fold[Nat, Type]] = F#Apply[Succ[N], N#FoldR[Init, Type, F]]
 	type FoldL[Init <: Type, Type, F <: Fold[Nat, Type]] = N#FoldL[F#Apply[Succ[N],Init], Type, F]
 	type Match[NonZero[N <: Nat] <: Up, IfZero <: Up, Up] = NonZero[N]
 	type Compare[O <: Nat] = O#Match[N#Compare, GT, Comparison]

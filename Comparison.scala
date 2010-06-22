@@ -1,19 +1,34 @@
 sealed trait Comparison {
-	type gt = Match[False, False, True, Bool]
-	type ge = Match[False, True, True, Bool]
-	type eq = Match[False, True, False, Bool]
-	type le = Match[True, True, False, Bool]
-	type lt = Match[True, False, False, Bool]
+	type gt <: Bool
+	type ge <: Bool
+	type eq <: Bool
+	type le <: Bool
+	type lt <: Bool
 	type Match[IfLT <: Up, IfEQ <: Up, IfGT <: Up, Up] <: Up
 }
 sealed trait GT extends Comparison {
 	type Match[IfLT <: Up, IfEQ <: Up, IfGT <: Up, Up] = IfGT
+	type eq = False
+	type gt = True
+	type lt = False
+	type le = False
+	type ge = True
 }
 sealed trait LT extends Comparison {
 	type Match[IfLT <: Up, IfEQ <: Up, IfGT <: Up, Up] = IfLT
+	type eq = False
+	type gt = False
+	type lt = True
+	type le = True
+	type ge = False
 }
 sealed trait EQ extends Comparison {
 	type Match[IfLT <: Up, IfEQ <: Up, IfGT <: Up, Up] = IfEQ
+	type eq = True
+	type gt = False
+	type lt = False
+	type le = True
+	type ge = True
 }
 object Comparison {
 	def show[C <: Comparison](implicit rep: ComparisonRep[C]): String = rep.value
