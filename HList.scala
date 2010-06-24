@@ -7,6 +7,7 @@ sealed trait HList
 	type Head
 	type Tail <: HList
 	type Length = Foldr[Nat, Fold.Inc, _0]
+	type Wrap[M[_]] <: HList
 	
 	type Foldr[Value, F <: Fold[Any, Value], I <: Value] <: Value
 	def foldr[Value, F <: Fold[Any, Value], I <: Value](f: F, i: I): Foldr[Value, F, I]
@@ -19,6 +20,7 @@ sealed trait HList
 
 final case class HCons[H, T <: HList](head : H, tail : T) extends HList
 {
+	type Wrap[M[_]] = HCons[ M[H], T#Wrap[M] ]
 	type Head = H
 	type Tail = T
 	def ::[T](v : T) = HCons(v, this)
@@ -40,6 +42,7 @@ sealed class HNil extends HList
 {
 	type Head = Nothing
 	type Tail = HNil
+	type Wrap[M[_]] = HNil
 	def ::[T](v : T) = HCons(v, this)
 
 	type Foldl[Value, F <: Fold[Any, Value], I <: Value] = I
