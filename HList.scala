@@ -16,6 +16,9 @@ sealed trait HList
 	def foldl[Value, F <: Fold[Any, Value], I <: Value](f: F, i: I): Foldl[Value, F, I]
 
 	type toI[N <: Nat] <: Indexed
+
+	type Fun[T]
+	def apply[T](f: Fun[T]): T
 }
 
 final case class HCons[H, T <: HList](head : H, tail : T) extends HList
@@ -35,7 +38,10 @@ final case class HCons[H, T <: HList](head : H, tail : T) extends HList
 
 	type IN[M <: Nat] = IndexedN[H, tail.toI[M]]
 	type toI[N <: Nat] = N#Match[ IN, Indexed0[H, T], Indexed]
-	
+
+	type Fun[T] = H => tail.Fun[T]
+	def apply[T](f: Fun[T]): T = tail( f(head) )
+
 	override def toString = head + " :: " + tail
 }
 sealed class HNil extends HList
@@ -52,6 +58,9 @@ sealed class HNil extends HList
 	def foldr[Value, F <: Fold[Any, Value], I <: Value](f: F, i: I) = i
 
 	type toI[N <: Nat] = Nothing
+
+	type Fun[T] = T
+	def apply[T](t: Fun[T]) = t
 }
 case object HNil extends HNil
 

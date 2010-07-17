@@ -122,6 +122,9 @@ object HListTest
 	val list: List[AnyVal] = toList(plain)
 	val list2 = toList[AnyVal](plain)
 
+	val app1 = (3 :: true :: 'c' :: HNil)( i => b => c => if(b) i else c.toInt )
+	val app2 = (3 :: false :: 'c' :: HNil)( i => b => c => if(b) i else c.toInt )
+
 	def run()
 	{
 		println(c)
@@ -138,5 +141,9 @@ object HListTest
 		println(b2)
 		println(rm)
 		println(fmp)
+
+		println()
+		println(app1)
+		println(app2)
 	}
 }
