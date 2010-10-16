@@ -5,7 +5,7 @@ object Test
 		HListTest.run()
 		NatTest.run()
 		DenseTest.run()
-		TreeTest.run()
+		//TreeTest.run()
 		TypedMapTest.run()
 	}
 }

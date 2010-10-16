@@ -1,4 +1,4 @@
-import Bool._
+/*import Bool._
 import TList._
 
 sealed trait Tree
@@ -109,4 +109,4 @@ object Tree
 		type Root = Empty
 		type Ord[a <: Key, b <: Key] = ord[a,b]
 	}
-}
+}*/

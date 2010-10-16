@@ -1,4 +1,4 @@
-import Dense._
+/*import Dense._
 import Bool._
 
 object TreeTest
@@ -26,4 +26,4 @@ object TreeTest
 		println( toInt[ FirstB#_1] + " -> " +  toBoolean[ FirstB#_2] )
 		println( toInt[ List#Head#_1 ] + ", " + toInt[ List#Tail#Head#_1 ]  + ", " + toInt[ List#Tail#Tail#Head#_1 ]  + ", " + toInt[ List#Tail#Tail#Tail#Head#_1 ])
 	}
-}
+}*/

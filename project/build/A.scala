@@ -6,6 +6,5 @@ class T(info: ProjectInfo) extends DefaultProject(info)
 	override def consoleInit =
 """import Dense._
 import Bool._
-import Tree._
 import HList._"""
 }
