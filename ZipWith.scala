@@ -3,41 +3,41 @@ import ~>._
 
 object ZipWith
 {
-	def zipWith[HL <: HList, T](f: HL => T)(kl: KList[Stream, HL]): Stream[T] =
+	def zipWith[HL <: HList, T](kl: KList[Stream, HL])(f: HL => T): Stream[T] =
 		if(anyEmpty(kl))
 			Stream.empty
 		else
-			Stream.cons( f( kl down heads ), zipWith( f )(kl map tails ) )
+			Stream.cons( f( kl down heads ), zipWith(kl map tails )(f) )
 			
-	def foreach[HL <: HList, T](f: HL => T)(kl: KList[Stream, HL]): Unit =
+	def foreach[HL <: HList, T](kl: KList[Stream, HL])(f: HL => T): Unit =
 		if(anyEmpty(kl))
 			()
 		else
 		{
 			f( kl down heads )
-			foreach( f )(kl map tails )
+			foreach(kl map tails )(f)
 		}
 		
-	def collect[HL <: HList, T](f: HL => Option[T])(kl: KList[Stream, HL]): Stream[T] =
+	def collect[HL <: HList, T](kl: KList[Stream, HL])(f: HL => Option[T]): Stream[T] =
 		if(anyEmpty(kl))
 			Stream.empty
 		else
 		{
 			lazy val ts = kl map tails
 			f( kl down heads ) match {
-				case Some(v) => Stream.cons(v, collect(f)( ts ) )
-				case None => collect(f)( ts ) // recurse directly on collect for tail position
+				case Some(v) => Stream.cons(v, collect( ts )(f) )
+				case None => collect( ts )(f) // recurse directly on collect for tail position
 			}
 		}
        
-	def flatMap[HL <: HList, T](f: HL => Stream[T])(kl: KList[Stream, HL]): Stream[T] =
-		zipWith(f)(kl).flatten
+	def flatMap[HL <: HList, T](kl: KList[Stream, HL])(f: HL => Stream[T]): Stream[T] =
+		zipWith(kl)(f).flatten
 		
-	def forall[HL <: HList](f: HL => Boolean)(kl: KList[Stream, HL]): Boolean =
-		zipWith(f)(kl).forall(identity[Boolean])
+	def forall[HL <: HList](kl: KList[Stream, HL])(f: HL => Boolean): Boolean =
+		zipWith(kl)(f).forall(identity[Boolean])
 		
-	def exists[HL <: HList](f: HL => Boolean)(kl: KList[Stream, HL]): Boolean =
-		zipWith(f)(kl).exists(identity[Boolean])
+	def exists[HL <: HList](kl: KList[Stream, HL])(f: HL => Boolean): Boolean =
+		zipWith(kl)(f).exists(identity[Boolean])
 		
 	def anyEmpty(kl: KList[Stream, _]): Boolean = kl.toList.exists(_.isEmpty)
 
@@ -56,12 +56,12 @@ trait ZippedK[S[_], HL <: HList] {
 object ZippedK
 {
 	implicit def zippedK[HL <: HList](in: KList[Stream, HL]): ZippedK[Stream, HL] = new ZippedK[Stream, HL] {
-		def zipWith[T](f: HL => T): Stream[T] = ZipWith.zipWith(f)(in)
-		def exists(f: HL => Boolean): Boolean = ZipWith.exists(f)(in)
-		def forall(f: HL => Boolean): Boolean = ZipWith.forall(f)(in)
-		def collect[T](f: HL => Option[T]): Stream[T] = ZipWith.collect(f)(in)
-		def foreach[T](f: HL => T): Unit = ZipWith.foreach(f)(in)
-		def flatMap[T](f: HL => Stream[T]): Stream[T] = ZipWith.flatMap(f)(in)
+		def zipWith[T](f: HL => T): Stream[T] = ZipWith.zipWith(in)(f)
+		def exists(f: HL => Boolean): Boolean = ZipWith.exists(in)(f)
+		def forall(f: HL => Boolean): Boolean = ZipWith.forall(in)(f)
+		def collect[T](f: HL => Option[T]): Stream[T] = ZipWith.collect(in)(f)
+		def foreach[T](f: HL => T): Unit = ZipWith.foreach(in)(f)
+		def flatMap[T](f: HL => Stream[T]): Stream[T] = ZipWith.flatMap(in)(f)
 	}
 	
 	type S[A] = Stream[A]
@@ -82,6 +82,7 @@ object ZippedK
 }
 
 import ZippedK._
+import KList._
 object ZTest
 {
 	val a = Stream(1,2,5,3,9,10,101)
@@ -90,9 +91,15 @@ object ZTest
 	
 	val f = (a: Int, b: String, c: Boolean) => if(c) a + b.length else b.sum
 	
+	val d0 = ZipWith.zipWith(a :^: b :^: c :^: KNil) {
+		case a :+: b :+: c :+: HNil => 
+			if(c) a + b.length else b.sum
+	}
+	println(d0.toList)
+
 	val d = (a,b,c) zipWith f
 	println(d.toList)
-	
+
 	val g = (a: Int, b: String, c: Boolean) => c && b.length == a
 	val d2 = (a,b,c) forall g
 	println(d2)
