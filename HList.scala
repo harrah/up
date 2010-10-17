@@ -76,10 +76,6 @@ object HList extends HApplyOps with UnzipOps
 		def unapply[H,T<:HList](list: HCons[H,T]) = Some((list.head,list.tail))
 	}
 	
-	def toList[S] = new ToList[S]
-	implicit def listHCons[H <: S, T <: HList, S](implicit f: T => List[S]): (H :: T) => List[S] = hc => hc.head :: f(hc.tail)
-	implicit def listHNil[S]: HNil => List[S] = hn => Nil
-	
 	import Indexed._
 	
 	type :::[A <: HList, B <: HList] = A#Foldr[HList, AppHCons.type, B]
@@ -144,7 +140,4 @@ sealed trait HListOps[B <: HList] {
 	def ::[A](b: A): A :: B
 
 	def zip[C <: HList, R <: HList](c: C)(implicit hzip: HZip[B,C, R]): R
-}
-final class ToList[S] {
-  def apply[H <: HList](h: H)(implicit f: H => List[S]): List[S] = f(h)
 }
