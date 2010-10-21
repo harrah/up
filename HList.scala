@@ -115,7 +115,21 @@ object HList extends HApplyOps with UnzipOps
 			def hlist = h
 			def last = h.tail.foldl[Any, Last.type, H](Last, h.head)
 			def i[N <: Nat](implicit i: H::T => Ind[N]) = i(h)
+			def t[S] = new TipDummy[S, H :: T](h)
 		}
+
+	sealed trait Tip[S, HL <: HList, Ind <: Indexed] {
+		def apply(hl: HL): Ind
+	}
+	implicit def tindexed0[S, H, T <: HList](implicit ev: S =:= H): Tip[S, H :: T, Indexed0[H, T]] =
+		new Tip[S, H :: T, Indexed0[H,T]] {
+			def apply(hc: H :: T) = new Indexed0[H, T](hc)
+		}
+	implicit def tindexedN[H, T <: HList, I <: Indexed, S](implicit iTail: Tip[S, T, I] ): Tip[S, H :: T, IndexedN[H, I]] =
+		new Tip[S, H :: T, IndexedN[H, I]] {
+			def apply(hc: H :: T) = new IndexedN[H, I](hc.head, iTail(hc.tail))
+		}
+	implicit def tipToInd[S, HL <: HList, I <: Indexed](dummy: TipDummy[S, HL])(implicit tip: Tip[S, HL, I]): I = tip(dummy.hl)
 
 	object Last extends Fold[Any, Any] {
 		type Apply[N <: Any, H <: Any] = N
@@ -129,7 +143,7 @@ sealed trait HConsOps[H, T <: HList] {
 	def hlist: H :: T
 	type Last = T#Foldl[Any, Last.type, H]
 	def i[N <: Nat](implicit it: H::T => Ind[N]): Ind[N]
-
+	def t[S]: TipDummy[S, H :: T]
 	type Ind[N <: Nat] = HCons[H, T]#toI[N]
 }
 sealed trait HListOps[B <: HList] {
@@ -141,3 +155,4 @@ sealed trait HListOps[B <: HList] {
 
 	def zip[C <: HList, R <: HList](c: C)(implicit hzip: HZip[B,C, R]): R
 }
+sealed class TipDummy[S, HL <: HList](val hl: HL)

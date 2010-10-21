@@ -83,6 +83,13 @@ object HListTest
 	val app1 = (3 :: true :: 'c' :: HNil)( i => b => c => if(b) i else c.toInt )
 	val app2 = (3 :: false :: 'c' :: HNil)( i => b => c => if(b) i else c.toInt )
 
+	val tipX = 3 :: "asdf" :: HNil
+	// want to do this:
+//	val tipH = tipX.t[Int].at
+	//   but have to do this because of #3201
+	val tipH = tipToInd(tipX.t[Int]).at
+
+
 	def run()
 	{
 		println(c)
