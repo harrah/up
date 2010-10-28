@@ -131,6 +131,8 @@ object HList extends HApplyOps with UnzipOps
 		}
 	implicit def tipToInd[S, HL <: HList, I <: Indexed](dummy: TipDummy[S, HL])(implicit tip: Tip[S, HL, I]): I = tip(dummy.hl)
 
+	implicit def hlistToSelect[HL <: HList](hl: HL): TypeSelect[HL] = new TypeSelect(hl)
+
 	object Last extends Fold[Any, Any] {
 		type Apply[N <: Any, H <: Any] = N
 		def apply[A,B](a: A, b: B) = a
