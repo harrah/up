@@ -7,4 +7,4 @@ scalacOptions ++= Seq(
   "-explaintypes"
 )
 
-initialCommands in console := "import Dense._, import Bool._, import HList._"
+initialCommands in console := "import up._, Dense._, Bool._, HList._"

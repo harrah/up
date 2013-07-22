@@ -2,13 +2,13 @@ package up
 
 
 trait ~>[-A[_], +B[_]] {
-	def apply[T](a: A[T]): B[T]
+    def apply[T](a: A[T]): B[T]
 }
 
 object ~> {
-	type Id[X] = X
-	trait Const[A] { type Apply[B] = A }
-	implicit def idEq : Id ~> Id = new (Id ~> Id) { def apply[T](a: T): T = a }
+    type Id[X] = X
+    trait Const[A] { type Apply[B] = A }
+    implicit def idEq : Id ~> Id = new (Id ~> Id) { def apply[T](a: T): T = a }
 }
 
 trait Param[A[_], B[_]] {
