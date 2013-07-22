@@ -9,6 +9,7 @@ sealed trait Comparison {
     type lt <: Bool
     type Match[IfLT <: Up, IfEQ <: Up, IfGT <: Up, Up] <: Up
 }
+
 sealed trait GT extends Comparison {
     type Match[IfLT <: Up, IfEQ <: Up, IfGT <: Up, Up] = IfGT
     type eq = False
@@ -17,6 +18,7 @@ sealed trait GT extends Comparison {
     type le = False
     type ge = True
 }
+
 sealed trait LT extends Comparison {
     type Match[IfLT <: Up, IfEQ <: Up, IfGT <: Up, Up] = IfLT
     type eq = False
@@ -25,6 +27,7 @@ sealed trait LT extends Comparison {
     type le = True
     type ge = False
 }
+
 sealed trait EQ extends Comparison {
     type Match[IfLT <: Up, IfEQ <: Up, IfGT <: Up, Up] = IfEQ
     type eq = True
@@ -33,6 +36,7 @@ sealed trait EQ extends Comparison {
     type le = True
     type ge = True
 }
+
 object Comparison {
     def show[C <: Comparison](implicit rep: ComparisonRep[C]): String = rep.value
     implicit def eqToRep: ComparisonRep[EQ] = new ComparisonRep[EQ]("eq")
