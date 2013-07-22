@@ -7,4 +7,6 @@ scalacOptions ++= Seq(
   "-explaintypes"
 )
 
+libraryDependencies += "org.specs2" %% "specs2" % "2.0" % "test"
+
 initialCommands in console := "import up._, Dense._, Bool._, HList._"

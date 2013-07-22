@@ -1,10 +1,14 @@
 package up
 
-
+import org.specs2.Specification
 import HList._
 import Nat._
 
-object HListTest {
+class HListTest extends Specification {
+  def is = "HList should"    ^
+    "work as expected" ! run ^
+                         end
+
   // a heterogeneous list of length 3 and type
   //  Int :: String :: List[Char] :: HNil
   val a = 3 :: "ai4" :: List('r','H') :: HNil
@@ -90,7 +94,7 @@ object HListTest {
   //   but have to do this because of #3201
   val tipH = tipToInd(tipX.t[Int]).at
 
-  def run() {
+  def run = {
     println(c)
     println(cc)
     println(ab)
@@ -106,5 +110,6 @@ object HListTest {
     println()
     println(app1)
     println(app2)
+    ok
   }
 }

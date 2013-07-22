@@ -1,9 +1,13 @@
 package up
 
-
+import org.specs2.Specification
 import HList.{tipToInd => tip, _}
 
-object TipTest {
+class TipTest extends Specification {
+  def is = "Tip should"      ^
+    "work as expected" ! run ^
+                         end
+
   val x = 3 :: true :: "asfd" :: 'k' :: () :: 9.3 ::  HNil
 
   // get the Boolean value
@@ -50,7 +54,7 @@ object TipTest {
   /* 3 :: true :: asfd :: k :: HNil */
   val dropRight = tip(x.reverse.t[Char]).drop.reverse
 
-  def run() {
+  def run = {
     println(x)
     println(b2)
     println(pre)
@@ -63,5 +67,6 @@ object TipTest {
     println(insH)
     println("(" + aa + ", " + bb + ")")
     println(dropRight)
+    ok
   }
 }

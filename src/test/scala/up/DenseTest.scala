@@ -1,11 +1,16 @@
 package up
 
+import org.specs2.Specification
 
 import Bool._
 import Dense._
 import Comparison._
 
-object DenseTest {
+class DenseTest extends Specification {
+  def is = "Dense should"    ^
+    "work as expected" ! run ^
+                         end
+
   val true = toBoolean[ _7#Add[_8]#Compare[_15]#eq]
   val true = toBoolean[ _5#Add[_7]#Compare[_12]#eq]
   val true = toBoolean[ _12#Compare[ _5#Add[_7] ]#eq]
@@ -15,9 +20,10 @@ object DenseTest {
   val 1073741824 = toInt[ _4#Exp[_15] ]
   val 279936 = toInt[ _6#Exp[_7] ]
 
-  def run() {
+  def run = {
     println()
     println( toInt[ _15 ] + ", " + toInt[ _14#Inc ] + ", " + toInt[ _10#Inc#Add[_4] ])
     println(  show[ _13#Add[_11]#Add[_12]#Compare[ _9#Add[_10]#Add[_12] ] ] )
+    ok 
   }
 }

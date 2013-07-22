@@ -1,9 +1,13 @@
 package up
 
-
+import org.specs2.Specification
 import HList._
 
-object HApplyTest {
+class HApplyTest extends Specification {
+  def is = "HApply should"   ^
+    "work as expected" ! run ^
+                         end
+
   // heterogeneous map ...
   //   We construct an HList of data and an HList of functions and apply the functions to the data cell-by-cell.
 
@@ -43,9 +47,10 @@ object HApplyTest {
   val ExpectedHead = List.fill(xx.head.sum)('s')
   val ExpectedHead :: (39 :: true :: HNil) :: HNil = r
 
-  def run() {
+  def run = {
     println(z1)
     println(z2)
     println(r)
+    ok
   }
 }

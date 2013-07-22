@@ -1,5 +1,6 @@
 package up
 
+import org.specs2.Specification
 
 final class MyTypeMap extends TypeMap {
   // define allowed mappings
@@ -10,7 +11,11 @@ final class MyTypeMap extends TypeMap {
   implicit val LIntToStr = new TypeMapping[List[Int], Int] {}
 }
 
-object TypedMapTest {
+class TypedMapTest extends Specification {
+  def is = "TypedMap should" ^
+    "work as expected" ! run ^
+                         end
+
   val m = new MyTypeMap
   import m._
 
@@ -29,19 +34,19 @@ object TypedMapTest {
   // compilation error
   //m( 'z' :: Nil) = 0
 
-    def run() {
-      assert( m[String, Int]("a") == 3 )
-      assert( m[String, Boolean]("a") == true )
-      assert( m(5) == "asdf" )
-      assert( m(17) == "jkl" )
-      assert( m( List[String]() ) == 9 )
-      assert( m( List[Int]() ) == 4 )
-      assert( m( 5 :: Nil ) == 7 )
-      assert( m( "xt" :: Nil ) == 7 )
+  def run = {
+    m[String, Int]("a") must_== 3
+    m[String, Boolean]("a") must_== true
+    m(5) must_== "asdf"
+    m(17) must_== "jkl"
+    m( List[String]() ) must_== 9
+    m( List[Int]() ) must_== 4
+    m( 5 :: Nil ) must_== 7
+    m( "xt" :: Nil ) must_== 7
 
-      assert( m.getOr("a", 5) == 3)
-      assert( m.getOr("b", 5) == 5)
-      assert( m.getOr("a", false) == true)
-      assert( m.getOr("b", false) == false)
-    }
+    m.getOr("a", 5) must_== 3
+    m.getOr("b", 5) must_== 5
+    m.getOr("a", false) must_== true
+    m.getOr("b", false) must_== false
+  }
 }
